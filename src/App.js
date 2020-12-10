@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
-function App() {
+import { CreateCell } from './pages/CreateCell'
+import { Table } from './pages/Table'
+
+import { Header } from './components/Header'
+import { Footer } from './components/Footer'
+
+import { AlertState } from './context/alert/AlertState'
+import { TableState } from './context/tadleData/TableState'
+
+
+
+export const App = () => {
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <TableState>
+      <AlertState>
+        <BrowserRouter>
+
+          <Header />
+          <div className="container">
+            <Switch>
+              <Route path={'/'} exact component={Table} />
+              <Route path={'/createcell'} component={CreateCell} />
+            </Switch>
+          </div>
+          <Footer />
+
+        </BrowserRouter>
+      </AlertState>
+    </TableState>
+  )
 }
 
-export default App;
+
