@@ -14,18 +14,19 @@ export const Table = () => {
 
     //==========================================================================
 
-    const { loading, rows, addedRow, fetchRows } = useContext(TableContext)
-    let resRows = []
-
+    const { loading, rows,page, fetchRows,chengePage } = useContext(TableContext)
+   
     useEffect(() => {
         // eslint-disable-next-line
         fetchRows()
+       
     }, [])
 
 
-    if (addedRow) {
-        resRows = addedRow.concat(rows)
-    }
+    // rows = Array.from(new Set(rows))
+      
+
+
 
 
 
@@ -33,8 +34,25 @@ export const Table = () => {
     if (loading) {
         return <Loader />
     } else {
+        
+        let count = 50
+        const countPages = Math.ceil(rows.length / count) 
+
+        const chengePages = (e) => {
+            chengePage(e.target.textContent, rows) 
+        }
+
+
         return (
             <div>
+                <div className="pages">
+
+                    {Array(countPages).fill().map((el, i) => {
+                        return <span onClick={chengePages} key={i}> {i} </span>
+                    })}
+
+                </div>
+
                 <table className="table table-bordered">
                     <thead className="thead-inverse">
                         <tr className="thead-dark">
@@ -46,11 +64,8 @@ export const Table = () => {
                         </tr>
                     </thead>
 
-
                     <tbody>
-
-
-                        {resRows.map((el, i) => {
+                        {rows.map((el, i) => {
                             return (
                                 <tr key={i}>
                                     <th scope="row">{el['id']}</th>
@@ -64,7 +79,8 @@ export const Table = () => {
                     </tbody>
                 </table>
 
-                <nav aria-label="...">
+
+                {/* <nav aria-label="...">
                     <ul className="pagination">
                         <li className="page-item disabled">
                             <a className="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
@@ -78,8 +94,8 @@ export const Table = () => {
                             <a className="page-link" href="#">Next</a>
                         </li>
                     </ul>
-                </nav>
-                
+                </nav> */}
+
             </div>
         )
     }

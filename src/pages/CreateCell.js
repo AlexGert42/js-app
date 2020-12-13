@@ -13,7 +13,7 @@ export const CreateCell = () => {
     })
     const table = useContext(TableContext)
 
-    const clickHendler = (e) => {
+    const clickHendler = e => {
         e.preventDefault()
         alert.show('alert!!!!', 'success')
         table.addRows(value)
