@@ -3,7 +3,7 @@ import React, { useReducer } from 'react'
 import axios from 'axios'
 import { TableContext } from './tableContext'
 import { tableReducer } from './tableReducer'
-import { SHOW_LOADER, FETCH_ROW, ADD_ROW, DATA_SELECTION, CHANGE_PAGES ,SEARCH} from '../types.js'
+import { SHOW_LOADER, FETCH_ROW, ADD_ROW, DATA_SELECTION, CHANGE_PAGES, SEARCH, NUM_PAGE, SORT_CLICK, SORT_DBLCLICK, SHOW_ROW } from '../types.js'
 
 import { minData, maxDate } from '../url'
 
@@ -13,20 +13,27 @@ export const TableState = ({ children }) => {
     const initialState = {
         rows: [],
         loading: false,
-        countRows: 0,
 
-        varable: '',
-        page: []
+        page: [],
+        numPage: 0,
+
+        showRow: null,
     }
-
     const [state, dispatch] = useReducer(tableReducer, initialState)
-
 
     const showLoader = () => dispatch({ type: SHOW_LOADER })
 
+    const smollToLarge = value => dispatch({ type: SORT_CLICK, value })
+
+    const LargeToSmoll = value => dispatch({ type: SORT_DBLCLICK, value })
+
+    const showFooterRow = row => dispatch({ type: SHOW_ROW, row })
+
+    const addRows = row => dispatch({ type: ADD_ROW, row })
+
+    const numberPage = value => dispatch({ type: NUM_PAGE, value })
 
     const fetchRows = async (url) => {
-        let count = 0
         let res = []
         let payload = []
         if (!url) {
@@ -40,41 +47,22 @@ export const TableState = ({ children }) => {
                 }
             })
         }
-        count = payload.length
         dispatch({
             type: FETCH_ROW,
             payload,
-            count,
         })
     }
 
-    const addRows = (data) => {
-        const row = {
-            "id": data['id'],
-            "firstName": data['firstName'],
-            "lastName": data['lastName'],
-            "email": data['email'],
-            "phone": data['phone'],
-        }
-        dispatch({
-            type: ADD_ROW,
-            row
-        })
-    }
-
-    const chengePage = (i = 0, rows) => {
+    const chengePage = (num = 0, rows) => {
         const count = 50
-        const countPages = Math.ceil(rows.length / count)
 
-
-        let start = i * count
+        let start = num * count
         let end = start + count
-        let pages = rows.slice(start, end)
+        let page = rows.slice(start, end)
 
         dispatch({
             type: CHANGE_PAGES,
-            payload: pages
-
+            payload: page,
         })
     }
 
@@ -84,10 +72,7 @@ export const TableState = ({ children }) => {
         } else if (v === 'Большая База') {
             fetchRows(maxDate)
         }
-        dispatch({
-            type: DATA_SELECTION,
-
-        })
+        dispatch({ type: DATA_SELECTION })
     }
 
     const searchRow = (value) => {
@@ -97,21 +82,24 @@ export const TableState = ({ children }) => {
         })
     }
 
-
-
-
-
-
-
     return (
         <TableContext.Provider value={{
-            showLoader, addRows, fetchRows, dataSelection, chengePage,searchRow,
+            showLoader,
+            addRows,
+            fetchRows,
+            dataSelection,
+            chengePage,
+            searchRow,
+            numberPage,
+            smollToLarge,
+            LargeToSmoll,
+            showFooterRow,
+
             loading: state.loading,
             rows: state.rows,
             page: state.page,
-
-            countRows: state.countRows,
-            varable: state.varable
+            numPage: state.numPage,
+            showRow: state.showRow,
         }}>
             {children}
         </TableContext.Provider>

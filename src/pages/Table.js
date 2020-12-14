@@ -3,100 +3,118 @@ import { Loader } from '../components/Loader'
 import { TableContext } from '../context/tadleData/tableContext'
 
 export const Table = () => {
-
-    const tableClickId = () => {
-        console.log('click');
+    const tableClickId = e => {
+        smollToLarge(
+            e.target.dataset.id ||
+            e.target.dataset.firstname ||
+            e.target.dataset.lastname ||
+            e.target.dataset.email ||
+            e.target.dataset.phone
+        )
     }
-    const tableDblCliskId = () => {
-        console.log('dblclick');
+    const tableDblCliskId = e => {
+        LargeToSmoll(
+            e.target.dataset.id ||
+            e.target.dataset.firstname ||
+            e.target.dataset.lastname ||
+            e.target.dataset.email ||
+            e.target.dataset.phone
+        )
     }
 
+    const {
+        loading,
+        rows,
+        page,
+        fetchRows,
+        chengePage,
+        numberPage,
+        numPage,
+        smollToLarge,
+        LargeToSmoll,
+        showFooterRow
+    } = useContext(TableContext)
 
-    //==========================================================================
 
-    const { loading, rows,page, fetchRows,chengePage } = useContext(TableContext)
-   
     useEffect(() => {
         // eslint-disable-next-line
         fetchRows()
-       
     }, [])
 
-
-    // rows = Array.from(new Set(rows))
-      
-
-
-
-
-
+    const rowsSelection = row => showFooterRow(row)
 
     if (loading) {
-        return <Loader />
+        return <div><Loader /></div>
     } else {
-        
-        let count = 50
-        const countPages = Math.ceil(rows.length / count) 
+        if (rows.length === 0) {
+            return null
+        } else {
 
-        const chengePages = (e) => {
-            chengePage(e.target.textContent, rows) 
+
+            const count = 50
+            const countPages = Math.ceil(rows.length / count)
+
+            // const chengePages = (e) => {
+            //     if (e === 0) {
+            //         numberPage(0)
+            //         chengePage(0, rows)
+            //     } else {
+
+            //     }
+
+            // }
+            // chengePages(0)
+
+            return (
+                <div>
+                    <div className="pages ">
+                        <nav aria-label="Page navigation example">
+                            <ul className="pagination justify-content-center">
+                                {Array(countPages).fill().map((el, i) => {
+                                    return (
+                                        <li className="page-item"
+                                            key={i}
+                                            className={i === numPage ? "page-link bg-dark text-secondary" : "page-link text-secondary"}
+                                            onClick={e => {
+                                                let num = e.target.textContent - 1
+                                                numberPage(num)
+                                                chengePage(num, rows)
+                                            }} >
+                                            {i + 1}
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <table className="table table-bordered">
+                        <thead className="thead-inverse">
+                            <tr className="thead-dark">
+                                <th onClick={tableClickId} onDoubleClick={tableDblCliskId} data-id="id">id</th>
+                                <th onClick={tableClickId} onDoubleClick={tableDblCliskId} data-firstname="firstName">Имя</th>
+                                <th onClick={tableClickId} onDoubleClick={tableDblCliskId} data-lastname="lastName">Фамилия</th>
+                                <th onClick={tableClickId} onDoubleClick={tableDblCliskId} data-email="email">Email</th>
+                                <th onClick={tableClickId} onDoubleClick={tableDblCliskId} data-phone="phone">Телефон</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {page.map((el, i) => {
+                                return (
+                                    <tr onClick={() => rowsSelection(el)} key={i}>
+                                        <th scope="row">{el['id']}</th>
+                                        <td>{el['firstName']}</td>
+                                        <td>{el['lastName']}</td>
+                                        <td>{el['email']}</td>
+                                        <td>{el['phone']}</td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            )
         }
 
-
-        return (
-            <div>
-                <div className="pages">
-
-                    {Array(countPages).fill().map((el, i) => {
-                        return <span onClick={chengePages} key={i}> {i} </span>
-                    })}
-
-                </div>
-
-                <table className="table table-bordered">
-                    <thead className="thead-inverse">
-                        <tr className="thead-dark">
-                            <th onClick={tableClickId} onDoubleClick={tableDblCliskId}>id</th>
-                            <th>Имя</th>
-                            <th>Фамилия</th>
-                            <th>Email</th>
-                            <th>Телефон</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {rows.map((el, i) => {
-                            return (
-                                <tr key={i}>
-                                    <th scope="row">{el['id']}</th>
-                                    <td>{el['firstName']}</td>
-                                    <td>{el['lastName']}</td>
-                                    <td>{el['email']}</td>
-                                    <td>{el['phone']}</td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
-
-
-                {/* <nav aria-label="...">
-                    <ul className="pagination">
-                        <li className="page-item disabled">
-                            <a className="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                        </li>
-                        <li className="page-item"><a className="page-link" href="#">1</a></li>
-                        <li className="page-item active" aria-current="page">
-                            <a className="page-link" href="#">2 <span className="sr-only">(current)</span></a>
-                        </li>
-                        <li className="page-item"><a className="page-link" href="#">3</a></li>
-                        <li className="page-item">
-                            <a className="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav> */}
-
-            </div>
-        )
     }
 }
