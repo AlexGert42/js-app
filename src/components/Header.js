@@ -9,7 +9,7 @@ export const Header = () => {
     const { dataSelection, searchRow, chengePage, rows} = useContext(TableContext)
     const miniData = (e) => {
       
-        dataSelection(e.target.innerText);
+        dataSelection(e.target.name);
         chengePage(0, rows)
     }
 
@@ -24,7 +24,6 @@ export const Header = () => {
         } else {
             alert.show('Введите данные для поиска','danger')
         }
-       
     }
 
     return (
@@ -35,8 +34,8 @@ export const Header = () => {
             </div>
             <div className="justify-content-end align-items-center col-6">
                 <div className="row">  
-                        <button type="button" datatype="1" onClick={miniData} className="btn btn-outline-success mr-md-2">Маленькая База</button>
-                        <button type="button" datatype="2" onClick={miniData} className="btn btn-outline-success mr-md-2">Большая База</button>
+                        <button type="button" datatype="1" onClick={miniData} name="mini" className="btn btn-outline-success mr-md-2">Маленькая База</button>
+                        <button type="button" datatype="2" onClick={miniData} name="big" className="btn btn-outline-success mr-md-2">Большая База</button>
                     <form className="form-inline mt-2 mt-md-0 ">
                             <input className="form-control mr-md-2"
                                 type="text"

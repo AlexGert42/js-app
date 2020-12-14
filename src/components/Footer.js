@@ -13,7 +13,6 @@ export const Footer = () => {
         return (
             <div className=" fixed-bottom bg-dark text-secondary ">
                 <Modal />
-
                 <div className="row justify-content-center mt-2  mb-2">
                     <div className="col-1 border-right border-secondary" >id: <div>{showRow['id']}</div></div>
                     <div className="col-1 border-right border-secondary" >Имя: <div>{showRow['firstName']}</div></div>

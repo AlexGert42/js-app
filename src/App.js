@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
-import { CreateCell } from './pages/CreateCell'
+import { FormRow } from './pages/FormRow'
 import { Table } from './pages/Table'
 
 import { Header } from './components/Header'
@@ -21,19 +21,15 @@ export const App = () => {
       <TableState>
         <AlertState>
           <BrowserRouter>
-
             <Header />
-
             <Modal />
-
             <div className="container">
               <Switch>
                 <Route path={'/'} exact component={Table} />
-                <Route path={'/createcell'} component={CreateCell} />
+                <Route path={'/createcell'} component={FormRow} />
               </Switch>
             </div>
             <Footer />
-
           </BrowserRouter>
         </AlertState>
       </TableState>

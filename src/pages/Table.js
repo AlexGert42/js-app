@@ -1,9 +1,14 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { Loader } from '../components/Loader'
 import { TableContext } from '../context/tadleData/tableContext'
+import { AlertContext } from '../context/alert/alertContext'
+
+
 
 export const Table = () => {
-    const tableClickId = e => {
+    const alert = useContext(AlertContext)
+
+    const tableClick = e => {
         smollToLarge(
             e.target.dataset.id ||
             e.target.dataset.firstname ||
@@ -11,8 +16,10 @@ export const Table = () => {
             e.target.dataset.email ||
             e.target.dataset.phone
         )
+        alert.show('Сортировка от малого', 'success')
     }
-    const tableDblCliskId = e => {
+
+    const tableDblClisk = e => {
         LargeToSmoll(
             e.target.dataset.id ||
             e.target.dataset.firstname ||
@@ -20,13 +27,15 @@ export const Table = () => {
             e.target.dataset.email ||
             e.target.dataset.phone
         )
+        alert.show('Сортировка от большего', 'success')
     }
+
+    const rowsSelection = row => showFooterRow(row)
 
     const {
         loading,
         rows,
         page,
-        fetchRows,
         chengePage,
         numberPage,
         numPage,
@@ -35,36 +44,14 @@ export const Table = () => {
         showFooterRow
     } = useContext(TableContext)
 
-
-    useEffect(() => {
-        // eslint-disable-next-line
-        fetchRows()
-    }, [])
-
-    const rowsSelection = row => showFooterRow(row)
-
     if (loading) {
         return <div><Loader /></div>
     } else {
         if (rows.length === 0) {
             return null
         } else {
-
-
             const count = 50
             const countPages = Math.ceil(rows.length / count)
-
-            // const chengePages = (e) => {
-            //     if (e === 0) {
-            //         numberPage(0)
-            //         chengePage(0, rows)
-            //     } else {
-
-            //     }
-
-            // }
-            // chengePages(0)
-
             return (
                 <div>
                     <div className="pages ">
@@ -87,15 +74,14 @@ export const Table = () => {
                             </ul>
                         </nav>
                     </div>
-
-                    <table className="table table-bordered">
+                    <table className="table table-bordered table-hover ">
                         <thead className="thead-inverse">
                             <tr className="thead-dark">
-                                <th onClick={tableClickId} onDoubleClick={tableDblCliskId} data-id="id">id</th>
-                                <th onClick={tableClickId} onDoubleClick={tableDblCliskId} data-firstname="firstName">Имя</th>
-                                <th onClick={tableClickId} onDoubleClick={tableDblCliskId} data-lastname="lastName">Фамилия</th>
-                                <th onClick={tableClickId} onDoubleClick={tableDblCliskId} data-email="email">Email</th>
-                                <th onClick={tableClickId} onDoubleClick={tableDblCliskId} data-phone="phone">Телефон</th>
+                                <th onClick={tableClick} onDoubleClick={tableDblClisk} data-id="id">id</th>
+                                <th onClick={tableClick} onDoubleClick={tableDblClisk} data-firstname="firstName">Имя</th>
+                                <th onClick={tableClick} onDoubleClick={tableDblClisk} data-lastname="lastName">Фамилия</th>
+                                <th onClick={tableClick} onDoubleClick={tableDblClisk} data-email="email">Email</th>
+                                <th onClick={tableClick} onDoubleClick={tableDblClisk} data-phone="phone">Телефон</th>
                             </tr>
                         </thead>
                         <tbody>

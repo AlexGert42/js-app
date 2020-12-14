@@ -15,8 +15,7 @@ const hendlers = {
     DEFAULT: state => state,
     [SEARCH]: (state, { value }) => ({
         ...state, page: state.rows.filter(el => {
-            let user = Object.values(el)
-            let res = user.filter(e => e == value)
+            let res = Object.values(el).filter(e => e == value)
             if (res[0] === value) {
                 return el
             } else {
@@ -66,7 +65,6 @@ const hendlers = {
 
 
 export const tableReducer = (state, action) => {
-    window.a = state
     const handle = hendlers[action.type] || hendlers.DEFAULT
     return handle(state, action)
 }

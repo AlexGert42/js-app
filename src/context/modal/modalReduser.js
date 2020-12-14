@@ -9,7 +9,6 @@ const hendlers = {
 
 
 export const modalReduser = (state, action) => {
-    window.b = state
     const handle = hendlers[action.type] || hendlers.DEFAULT
     return handle(state, action)
 }

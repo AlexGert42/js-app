@@ -9,7 +9,6 @@ export const Modal = () => {
     } else {
         return (
             <div className={flag ? "my-modal__ovelay active" : "my-modal__ovelay"} onClick={() => modalFlag(false)} >
-
                 <div className="my-modal__window" onClick={e => e.stopPropagation()}>
                     <div className="my-modal__header">
                         <div className="my-modal__title ">Дополнительная информация: {userInfo['firstName']}</div>
